@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /projects/{uid}/{projectId}/{itemId}/{filename} {
+      // Public read — enables file links on the share page
+      allow read: if true;
+
+      // Only the owner (uid matches path) can write or delete
+      allow write: if request.auth != null
+                   && request.auth.uid == uid;
+    }
+
+    // Deny everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
