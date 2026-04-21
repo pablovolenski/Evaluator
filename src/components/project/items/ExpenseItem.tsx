@@ -16,7 +16,7 @@ interface ExpenseItemProps {
 
 export function ExpenseItem({ prefix, index, uid, projectId, onRemove }: ExpenseItemProps) {
   const { register, watch, setValue, formState: { errors } } = useFormContext<ProjectSchemaData>();
-  const amountLabel = prefix === 'recurringExpenses' ? 'Amount / year' : 'Amount';
+  const amountLabel = prefix === 'recurringExpenses' ? 'Amount / month' : 'Amount';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fieldErrors = (errors as any)?.[prefix]?.[index];
 

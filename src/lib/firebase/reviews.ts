@@ -52,7 +52,8 @@ export async function submitReview(
   const pRef = doc(db, PROJECTS, projectId);
 
   await runTransaction(db, async (tx) => {
-    const [rSnap, pSnap] = await Promise.all([tx.get(rRef), tx.get(pRef)]);
+    const rSnap = await tx.get(rRef);
+    const pSnap = await tx.get(pRef);
     const currentCount: number = pSnap.data()?.reviewCount ?? 0;
     const currentAvg: number = pSnap.data()?.averageRating ?? 0;
 

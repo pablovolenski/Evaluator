@@ -50,7 +50,7 @@ export function ExpensesSection({ uid, projectId }: ExpensesSectionProps) {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-medium text-gray-700">Recurring Expenses (per year)</h3>
+          <h3 className="text-sm font-medium text-gray-700">Recurring Expenses <span className="text-gray-400 font-normal">(monthly amount)</span></h3>
           <Button
             type="button"
             variant="outline"

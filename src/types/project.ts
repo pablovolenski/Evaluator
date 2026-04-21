@@ -11,6 +11,9 @@ export interface DemandItem {
   description: string;
   unitsPerYear: number;
   pricePerUnit: number;
+  unitsMode?: 'monthly' | 'yearly';
+  monthlyUnits?: number[];
+  yearlyUnits?: number[];
   fileUrl?: string;
   fileName?: string;
 }

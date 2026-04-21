@@ -27,6 +27,9 @@ const demandItemSchema = z.object({
   description: z.string().min(1, 'Description required'),
   unitsPerYear: z.number().min(0),
   pricePerUnit: z.number().min(0),
+  unitsMode: z.enum(['monthly', 'yearly']).optional(),
+  monthlyUnits: z.array(z.number().min(0)).optional(),
+  yearlyUnits: z.array(z.number().min(0)).optional(),
   fileUrl: z.string().optional(),
   fileName: z.string().optional(),
 });
