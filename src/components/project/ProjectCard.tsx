@@ -9,9 +9,10 @@ import { formatCurrency } from '@/lib/utils/format';
 interface ProjectCardProps {
   project: Project;
   onDelete?: (id: string) => void;
+  readonly?: boolean;
 }
 
-export function ProjectCard({ project, onDelete }: ProjectCardProps) {
+export function ProjectCard({ project, onDelete, readonly }: ProjectCardProps) {
   const result = evaluateProject(project);
 
   return (
@@ -52,13 +53,15 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
       </dl>
 
       <div className="mt-4 flex gap-2">
-        <Link href={`/projects/${project.id}/results`} className="flex-1 text-center rounded-md bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition-colors">
+        <Link href={readonly ? `/share/${project.id}` : `/projects/${project.id}/results`} className="flex-1 text-center rounded-md bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition-colors">
           View results
         </Link>
-        <Link href={`/projects/${project.id}`} className="flex-1 text-center rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
-          Edit
-        </Link>
-        {onDelete && (
+        {!readonly && (
+          <Link href={`/projects/${project.id}`} className="flex-1 text-center rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+            Edit
+          </Link>
+        )}
+        {!readonly && onDelete && (
           <button
             onClick={() => onDelete(project.id)}
             className="rounded-md border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
