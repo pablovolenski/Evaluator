@@ -14,10 +14,14 @@ import { RevenueSection } from './sections/RevenueSection';
 import { SettingsSection } from './sections/SettingsSection';
 import { Button } from '@/components/ui/Button';
 
+// Empty number inputs come in as NaN via valueAsNumber; .catch(0) handles that
+// while keeping the inferred TypeScript type as `number`
+const nn = z.number().catch(0);
+
 const expenseItemSchema = z.object({
   id: z.string(),
   description: z.string().min(1, 'Description required'),
-  amount: z.number().min(0),
+  amount: nn,
   fileUrl: z.string().optional(),
   fileName: z.string().optional(),
 });
@@ -25,11 +29,11 @@ const expenseItemSchema = z.object({
 const demandItemSchema = z.object({
   id: z.string(),
   description: z.string().min(1, 'Description required'),
-  unitsPerYear: z.number().min(0),
-  pricePerUnit: z.number().min(0),
+  unitsPerYear: nn,
+  pricePerUnit: nn,
   unitsMode: z.enum(['monthly', 'yearly']).optional(),
-  monthlyUnits: z.array(z.number().min(0)).optional(),
-  yearlyUnits: z.array(z.number().min(0)).optional(),
+  monthlyUnits: z.array(nn).optional(),
+  yearlyUnits: z.array(nn).optional(),
   fileUrl: z.string().optional(),
   fileName: z.string().optional(),
 });
@@ -37,7 +41,7 @@ const demandItemSchema = z.object({
 const liquidationItemSchema = z.object({
   id: z.string(),
   description: z.string().min(1, 'Description required'),
-  amount: z.number().min(0),
+  amount: nn,
   fileUrl: z.string().optional(),
   fileName: z.string().optional(),
 });
