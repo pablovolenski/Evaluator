@@ -15,6 +15,14 @@ export interface DemandItem {
   fileName?: string;
 }
 
+export interface LiquidationItem {
+  id: string;
+  description: string;
+  amount: number;
+  fileUrl?: string;
+  fileName?: string;
+}
+
 export interface Project {
   id: string;
   uid: string;
@@ -27,6 +35,7 @@ export interface Project {
   initialInvestment: ExpenseItem[];
   recurringExpenses: ExpenseItem[];
   demandItems: DemandItem[];
+  liquidationItems: LiquidationItem[];
 }
 
 export type ProjectFormData = Omit<Project, 'id' | 'uid' | 'createdAt' | 'updatedAt'>;

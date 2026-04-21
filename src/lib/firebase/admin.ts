@@ -30,5 +30,6 @@ export async function getProjectAdmin(id: string): Promise<Project | null> {
     initialInvestment: data.initialInvestment ?? [],
     recurringExpenses: data.recurringExpenses ?? [],
     demandItems: data.demandItems ?? [],
+    liquidationItems: data.liquidationItems ?? [],
   };
 }

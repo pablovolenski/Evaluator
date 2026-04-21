@@ -10,7 +10,7 @@ import { createProject, updateProject, newProjectRef } from '@/lib/firebase/fire
 import type { Project } from '@/types/project';
 import { BasicInfoSection } from './sections/BasicInfoSection';
 import { ExpensesSection } from './sections/ExpensesSection';
-import { DemandSection } from './sections/DemandSection';
+import { RevenueSection } from './sections/RevenueSection';
 import { SettingsSection } from './sections/SettingsSection';
 import { Button } from '@/components/ui/Button';
 
@@ -31,6 +31,14 @@ const demandItemSchema = z.object({
   fileName: z.string().optional(),
 });
 
+const liquidationItemSchema = z.object({
+  id: z.string(),
+  description: z.string().min(1, 'Description required'),
+  amount: z.number().min(0),
+  fileUrl: z.string().optional(),
+  fileName: z.string().optional(),
+});
+
 export const projectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   description: z.string().max(1000),
@@ -39,6 +47,7 @@ export const projectSchema = z.object({
   initialInvestment: z.array(expenseItemSchema),
   recurringExpenses: z.array(expenseItemSchema),
   demandItems: z.array(demandItemSchema),
+  liquidationItems: z.array(liquidationItemSchema),
 });
 
 export type ProjectSchemaData = z.infer<typeof projectSchema>;
@@ -58,6 +67,7 @@ export function ProjectForm({ existing }: ProjectFormProps) {
     defaultValues: existing
       ? {
           ...existing,
+          liquidationItems: existing.liquidationItems ?? [],
           discountRate: existing.discountRate <= 1 ? existing.discountRate * 100 : existing.discountRate,
         }
       : {
@@ -68,6 +78,7 @@ export function ProjectForm({ existing }: ProjectFormProps) {
           initialInvestment: [],
           recurringExpenses: [],
           demandItems: [],
+          liquidationItems: [],
         },
   });
 
@@ -75,6 +86,7 @@ export function ProjectForm({ existing }: ProjectFormProps) {
     if (existing) {
       methods.reset({
         ...existing,
+        liquidationItems: existing.liquidationItems ?? [],
         discountRate: existing.discountRate <= 1 ? existing.discountRate * 100 : existing.discountRate,
       });
     }
@@ -112,7 +124,7 @@ export function ProjectForm({ existing }: ProjectFormProps) {
         <hr className="border-gray-200" />
         <ExpensesSection uid={user?.uid ?? ''} projectId={projectId} />
         <hr className="border-gray-200" />
-        <DemandSection uid={user?.uid ?? ''} projectId={projectId} />
+        <RevenueSection uid={user?.uid ?? ''} projectId={projectId} />
 
         {saveError && <p className="text-sm text-red-600">{saveError}</p>}
 
