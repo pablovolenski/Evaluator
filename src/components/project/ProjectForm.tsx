@@ -105,10 +105,11 @@ export function ProjectForm({ existing }: ProjectFormProps) {
     setSaveError('');
 
     // Normalise discount rate: user sees percentage (e.g. "10"), store as decimal (0.10)
-    const normalised = {
+    // JSON round-trip strips undefined fields — Firestore rejects undefined values
+    const normalised = JSON.parse(JSON.stringify({
       ...data,
       discountRate: data.discountRate > 1 ? data.discountRate / 100 : data.discountRate,
-    };
+    }));
 
     try {
       if (existing) {
