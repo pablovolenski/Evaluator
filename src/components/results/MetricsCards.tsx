@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { EvaluationResult } from '@/types/evaluation';
 import { formatCurrency, formatPercent, formatYears } from '@/lib/utils/format';
 import { clsx } from 'clsx';
@@ -10,13 +11,15 @@ interface MetricsCardsProps {
 
 interface CardProps {
   label: string;
-  tooltip: string;
+  description: string;
   value: string;
   sub?: string;
   positive?: boolean | null;
 }
 
-function MetricCard({ label, tooltip, value, sub, positive }: CardProps) {
+function MetricCard({ label, description, value, sub, positive }: CardProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className={clsx(
       'rounded-xl border p-5',
@@ -24,18 +27,26 @@ function MetricCard({ label, tooltip, value, sub, positive }: CardProps) {
       positive === false && 'border-red-200 bg-red-50',
       (positive === null || positive === undefined) && 'border-gray-200 bg-white'
     )}>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <p className="text-sm font-medium text-gray-500">{label}</p>
-        <div className="relative group">
-          <span className="cursor-default select-none text-xs text-gray-400 hover:text-gray-600 transition-colors">ⓘ</span>
-          <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-lg bg-gray-900 px-3 py-2 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10 shadow-lg">
-            {tooltip}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-label={`What is ${label}?`}
+          className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 hover:bg-indigo-100 text-gray-500 hover:text-indigo-600 transition-colors text-xs font-bold leading-none select-none"
+        >
+          i
+        </button>
       </div>
+
+      {open && (
+        <p className="mt-2 text-xs text-gray-600 leading-relaxed bg-white/70 rounded-lg px-2.5 py-2 border border-gray-100">
+          {description}
+        </p>
+      )}
+
       <p className={clsx(
-        'mt-1 text-2xl font-bold',
+        'mt-2 text-2xl font-bold',
         positive === true && 'text-green-700',
         positive === false && 'text-red-700',
         (positive === null || positive === undefined) && 'text-gray-900'
@@ -53,35 +64,35 @@ export function MetricsCards({ result }: MetricsCardsProps) {
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
       <MetricCard
         label="NPV"
-        tooltip="Sum of all future cash flows discounted to today's value using your discount rate. Positive means the project creates value above your required return."
+        description="Net Present Value — how much your project is worth in today's money after discounting future cash flows. Positive means it creates real value."
         value={formatCurrency(npv)}
         sub="Net Present Value"
         positive={npv >= 0}
       />
       <MetricCard
         label="IRR"
-        tooltip="The discount rate at which NPV equals zero. Compare it against your cost of capital — if IRR is higher, the project is worth pursuing."
+        description="The annual return rate your project generates. If this is higher than what you'd get elsewhere (e.g. a bank), your project is worth it."
         value={irr !== null ? formatPercent(irr * 100) : 'N/A'}
         sub="Internal Rate of Return"
         positive={irr !== null ? irr > 0 : undefined}
       />
       <MetricCard
         label="Payback"
-        tooltip="How many years it takes for cumulative cash flows to fully recover the initial investment. Shorter is better."
+        description="How long until the project pays for itself. After this point, everything it earns is pure gain."
         value={formatYears(paybackYears)}
         sub="Time to recover investment"
         positive={paybackYears !== null ? true : false}
       />
       <MetricCard
         label="ROI"
-        tooltip="Total net gain divided by total investment, expressed as a percentage. Does not account for the time value of money."
+        description="Return on Investment — for every dollar you put in, how many dollars do you get back? 50% means you get $1.50 for every $1 invested."
         value={formatPercent(roi)}
         sub="Return on Investment"
         positive={roi >= 0}
       />
       <MetricCard
         label="Net Value"
-        tooltip="Total cash generated over the project lifetime with no discounting — simply all inflows minus all outflows. Shows raw profitability before adjusting for the time value of money."
+        description="The total money your project will produce over its lifetime, plain and simple — all income minus all costs, no financial formulas."
         value={formatCurrency(netValue)}
         sub="Undiscounted total"
         positive={netValue >= 0}
