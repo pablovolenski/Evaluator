@@ -13,12 +13,15 @@ export function evaluateProject(project: Project): EvaluationResult {
   const paybackYears = calculatePayback(cashFlows);
   const roi = calculateROI(cashFlows);
 
+  const netValue = cashFlows[cashFlows.length - 1]?.cumulativeCashFlow ?? 0;
+
   return {
     cashFlows,
     npv,
     irr,
     paybackYears,
     roi,
+    netValue,
     isViable: npv > 0,
   };
 }

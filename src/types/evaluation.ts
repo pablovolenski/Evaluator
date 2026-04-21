@@ -12,5 +12,6 @@ export interface EvaluationResult {
   irr: number | null;
   paybackYears: number | null;
   roi: number;
+  netValue: number;
   isViable: boolean;
 }
