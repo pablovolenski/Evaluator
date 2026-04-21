@@ -32,6 +32,8 @@ function toProject(id: string, data: DocumentData): Project {
     recurringExpenses: data.recurringExpenses ?? [],
     demandItems: data.demandItems ?? [],
     liquidationItems: data.liquidationItems ?? [],
+    averageRating: data.averageRating,
+    reviewCount: data.reviewCount,
   };
 }
 

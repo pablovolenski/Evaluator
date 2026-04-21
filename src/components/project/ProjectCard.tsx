@@ -29,6 +29,14 @@ export function ProjectCard({ project, onDelete, readonly }: ProjectCardProps) {
         </Badge>
       </div>
 
+      {(project.reviewCount ?? 0) > 0 && project.averageRating != null && (
+        <div className="mt-3 flex items-center gap-1.5">
+          <span className="text-yellow-500 text-sm">★</span>
+          <span className="text-sm font-semibold text-gray-800">{project.averageRating.toFixed(1)}</span>
+          <span className="text-xs text-gray-400">/ 10 · {project.reviewCount} {project.reviewCount === 1 ? 'review' : 'reviews'}</span>
+        </div>
+      )}
+
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div>
           <dt className="text-gray-500">NPV</dt>

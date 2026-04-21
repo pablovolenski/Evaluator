@@ -3,19 +3,35 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /projects/{projectId} {
-      // Public read — enables the share page without authentication
       allow read: if true;
-
-      // Only authenticated users can create, and only for their own UID
       allow create: if request.auth != null
                     && request.resource.data.uid == request.auth.uid;
-
-      // Only the owner can update or delete
-      allow update, delete: if request.auth != null
-                             && resource.data.uid == request.auth.uid;
+      allow delete: if request.auth != null
+                    && resource.data.uid == request.auth.uid;
+      // Owner can update any field; any authenticated user can update only review stats
+      allow update: if request.auth != null && (
+        resource.data.uid == request.auth.uid
+        || request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['averageRating', 'reviewCount'])
+      );
     }
 
-    // Deny all other collections
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.rating is int
+                    && request.resource.data.rating >= 1
+                    && request.resource.data.rating <= 10;
+      allow update: if request.auth != null
+                    && resource.data.uid == request.auth.uid
+                    && request.resource.data.rating is int
+                    && request.resource.data.rating >= 1
+                    && request.resource.data.rating <= 10;
+      allow delete: if request.auth != null
+                    && resource.data.uid == request.auth.uid;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

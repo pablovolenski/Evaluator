@@ -36,6 +36,8 @@ export interface Project {
   recurringExpenses: ExpenseItem[];
   demandItems: DemandItem[];
   liquidationItems: LiquidationItem[];
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export type ProjectFormData = Omit<Project, 'id' | 'uid' | 'createdAt' | 'updatedAt'>;

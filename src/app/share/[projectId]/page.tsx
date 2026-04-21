@@ -6,6 +6,7 @@ import { formatCurrency, formatPercent, formatYears } from '@/lib/utils/format';
 import { MetricsCards } from '@/components/results/MetricsCards';
 import { CashFlowTable } from '@/components/results/CashFlowTable';
 import { CashFlowChart } from '@/components/results/CashFlowChart';
+import { ReviewSection } from '@/components/review/ReviewSection';
 import { Badge } from '@/components/ui/Badge';
 import Link from 'next/link';
 
@@ -90,6 +91,8 @@ export default async function SharePage({ params }: Props) {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Cash Flow Table</h2>
           <CashFlowTable cashFlows={result.cashFlows} />
         </div>
+
+        <ReviewSection projectId={projectId} ownerId={project.uid} />
 
         <div className="rounded-xl border border-indigo-100 bg-indigo-50 p-6 text-center">
           <p className="text-indigo-800 font-medium">Want to evaluate your own business idea?</p>
