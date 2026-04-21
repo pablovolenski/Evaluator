@@ -31,6 +31,7 @@ function toProject(id: string, data: DocumentData): Project {
     initialInvestment: data.initialInvestment ?? [],
     recurringExpenses: data.recurringExpenses ?? [],
     demandItems: data.demandItems ?? [],
+    liquidationItems: data.liquidationItems ?? [],
   };
 }
 
