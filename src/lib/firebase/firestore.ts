@@ -9,6 +9,7 @@ import {
   query,
   where,
   orderBy,
+  limit,
   serverTimestamp,
   type DocumentData,
 } from 'firebase/firestore';
@@ -61,6 +62,16 @@ export async function getProject(id: string): Promise<Project | null> {
   const snap = await getDoc(doc(getFirebaseDb(), COLLECTION, id));
   if (!snap.exists()) return null;
   return toProject(snap.id, snap.data());
+}
+
+export async function getAllProjects(limitCount = 50): Promise<Project[]> {
+  const q = query(
+    collection(getFirebaseDb(), COLLECTION),
+    orderBy('createdAt', 'desc'),
+    limit(limitCount)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => toProject(d.id, d.data()));
 }
 
 export async function getUserProjects(uid: string): Promise<Project[]> {
